@@ -73,3 +73,80 @@ public class AppConfiguration implements WebMvcConfigurer, ApplicationContextAwa
         return resolver;
     }
 }
+
+
+
+
+public class CustomerDAO {
+    private EntityManager entityManager;
+
+    public CustomerDAO(EntityManager entityManager) {
+        this.entityManager = entityManager;
+    }
+
+    public Customer findById(Long id) {
+        return entityManager.find(Customer.class, id);
+    }
+
+    public void save(Customer customer) {
+        if (customer.getId() == null) {
+            entityManager.persist(customer);
+        } else {
+            entityManager.merge(customer);
+        }
+    }
+
+    public void delete(Customer customer) {
+        entityManager.remove(customer);
+    }
+}
+
+
+
+
+
+
+
+
+
+public interface CustomerRepository extends JpaRepository<Customer, Long> {
+    // Không cần phải viết các phương thức findById, save, delete ... nữa
+    // Các phương thức này đã được JpaRepository cung cấp sẵn
+    List<Customer> findByName(String name);
+}
+
+
+
+
+
+
+public List<Customer> findByName(String name) {
+    String jpql = "SELECT c FROM Customer c WHERE c.name = :name";
+    return entityManager.createQuery(jpql, Customer.class)
+            .setParameter("name", name)
+            .getResultList();
+}
+
+
+public interface CustomerRepository extends JpaRepository<Customer, Long> {
+    List<Customer> findByName(String name);
+}
+
+
+
+public List<Customer> getCustomers(int page, int size) {
+    String jpql = "SELECT c FROM Customer c";
+    return entityManager.createQuery(jpql, Customer.class)
+            .setFirstResult(page * size)
+            .setMaxResults(size)
+            .getResultList();
+}
+
+
+
+public Page<Customer> findByName(String name, Pageable pageable);
+
+
+
+
+

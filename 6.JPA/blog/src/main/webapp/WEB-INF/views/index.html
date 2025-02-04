@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="layout :: head">
+    <title>Danh sách Blog</title>
+</head>
+<body>
+    <header th:replace="layout :: header"></header>
+
+    <div class="main-content">
+        <div class="container">
+            <h3>Danh sách Blog</h3>
+
+            <div class="notify">
+                <div th:if="${success}" class="alert alert-success">
+                    <span th:text="${success}"></span>
+                </div>
+                <div th:if="${error}" class="alert alert-danger">
+                    <span th:text="${error}"></span>
+                </div>
+            </div>
+
+            <div th:if="${#lists.isEmpty(blogs)}" class="alert alert-info">
+                Chưa có bài blog nào. Hãy tạo bài blog đầu tiên!
+            </div>
+
+            <div class="table-responsive" th:if="${not #lists.isEmpty(blogs)}">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Tiêu đề</th>
+                            <th>Nội dung</th>
+                            <th>Ngày tạo</th>
+                            <th>Cập nhật lần cuối</th>
+                            <th>Thao tác</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="blog : ${blogs}">
+                            <td th:text="${blog.title}"></td>
+                            <td th:text="${#strings.abbreviate(blog.content, 50)}"></td>
+                            <td th:text="${#temporals.format(blog.createdAt, 'dd/MM/yyyy HH:mm')}"></td>
+                            <td th:text="${#temporals.format(blog.updatedAt, 'dd/MM/yyyy HH:mm')}"></td>
+                            <td class="actions">
+                                <a th:href="@{/blog/{id}/view(id=${blog.id})}" class="btn-view">Xem</a>
+                                <a th:href="@{/blog/{id}/edit(id=${blog.id})}" class="btn-edit">Sửa</a>
+                                <a th:href="@{/blog/{id}/delete(id=${blog.id})}" class="btn-delete"
+                                onclick="return confirm('Bạn có chắc chắn muốn xóa blog này không? Hành động này không thể hoàn tác!')">Xóa</a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <footer th:replace="layout :: footer"></footer>
+
+    <style>
+        .table-responsive {
+            overflow-x: auto;
+        }
+        
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: #fff;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+        
+        .table th,
+        .table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .table th {
+            background-color: #f8f9fa;
+            font-weight: 500;
+        }
+        
+        .table tr:hover {
+            background-color: #f5f5f5;
+        }
+        
+        .actions {
+            white-space: nowrap;
+        }
+        
+        .btn-create {
+            display: inline-block;
+            padding: 6px 12px;
+            margin: 2px;
+            border-radius: 4px;
+            text-decoration: none;
+            color: white;
+            background-color: #28a745;
+        }
+        
+        .btn-view,
+        .btn-edit,
+        .btn-delete {
+            display: inline-block;
+            padding: 6px 12px;
+            margin: 0 2px;
+            border-radius: 4px;
+            text-decoration: none;
+            font-weight: 500;
+            color: white;
+        }
+        
+        .btn-view {
+            background-color: #17a2b8;
+        }
+        
+        .btn-edit {
+            background-color: #ffc107;
+        }
+        
+        .btn-delete {
+            background-color: #dc3545;
+        }
+        
+        .alert {
+            padding: 12px;
+            margin: 10px 0;
+            border-radius: 4px;
+        }
+        
+        .alert-success {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        
+        .alert-danger {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+        
+        .alert-info {
+            background-color: #d1ecf1;
+            color: #0c5460;
+        }
+    </style>
+</body>
+</html>

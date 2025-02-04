@@ -1,0 +1,126 @@
+/* src/main/resources/static/css/styles.css */
+
+/* Global Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Root Variables */
+:root {
+    --primary-color: #333;
+    --secondary-color: #f4f4f4;
+    --hover-color: #555;
+    --accent-color: #fff;
+    --table-header-bg: #f2f2f2;
+    --border-color: #ddd;
+    --box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Body Styling */
+body {
+    font-family: Arial, sans-serif;
+    background-color: var(--secondary-color);
+    color: var(--primary-color);
+}
+
+/* Header Styling */
+header {
+    background-color: var(--primary-color);
+    color: var(--accent-color);
+    padding: 10px 0;
+    text-align: center;
+}
+
+/* Navigation Styling */
+nav {
+    margin: 20px 0;
+    text-align: center;
+}
+
+nav a {
+    margin: 0 15px;
+    text-decoration: none;
+    color: var(--primary-color);
+    transition: color 0.3s ease;
+}
+
+nav a:hover {
+    text-decoration: underline;
+}
+
+/* Container Styling */
+.container {
+    width: 80%;
+    margin: 0 auto;
+    background-color: var(--accent-color);
+    padding: 20px;
+    box-shadow: var(--box-shadow);
+}
+
+/* Table Styling */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+}
+
+table, th, td {
+    border: 1px solid var(--border-color);
+}
+
+th, td {
+    padding: 12px;
+    text-align: left;
+}
+
+th {
+    background-color: var(--table-header-bg);
+}
+
+/* Input Fields and Submit Button Styling */
+input[type="text"], input[type="submit"] {
+    padding: 12px;
+    margin: 5px 0;
+    width: 100%;
+    box-sizing: border-box;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+}
+
+input[type="submit"] {
+    background-color: var(--primary-color);
+    color: var(--accent-color);
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+input[type="submit"]:hover {
+    background-color: var(--hover-color);
+}
+
+input[type="submit"]:focus {
+    outline: none;
+    background-color: var(--hover-color);
+}
+
+/* Responsive Design */
+@media screen and (max-width: 768px) {
+    .container {
+        width: 90%;
+    }
+
+    nav {
+        margin: 10px 0;
+    }
+
+    nav a {
+        margin: 0 10px;
+    }
+
+    table {
+        font-size: 14px;
+    }
+}
