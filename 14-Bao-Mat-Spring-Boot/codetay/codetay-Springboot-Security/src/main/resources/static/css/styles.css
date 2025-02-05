@@ -1,0 +1,15 @@
+body {
+    background: black;
+    background-size: cover;
+}
+
+@keyframes blink {
+    0% { color: red; }
+    33% { color: green; }
+    66% { color: blue; }
+    100% { color: red; }
+}
+
+.blinking-text {
+    animation: blink 1s infinite;
+}
