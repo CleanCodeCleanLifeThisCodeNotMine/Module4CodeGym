@@ -1,48 +1,47 @@
 package com.example.cruddemo.controller;
 
-import com.example.cruddemo.security.JwtUtils;
+import com.example.cruddemo.config.jwt.JwtResponse;
+import com.example.cruddemo.config.service.JwtService;
+import com.example.cruddemo.model.User;
+import com.example.cruddemo.service.user.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/auth")
+@CrossOrigin("*")
 public class AuthController {
 
-    private final JwtUtils jwtUtils;
+
+    private final AuthenticationManager authenticationManager;
 
     @Autowired
-    public AuthController(JwtUtils jwtUtils) {
-        this.jwtUtils = jwtUtils;
+    private JwtService jwtService;
+
+    @Autowired
+    private IUserService userService;
+
+    public AuthController(AuthenticationManager authenticationManager) {
+        this.authenticationManager = authenticationManager;
     }
 
-    @PostMapping("/login")
-    public String login(@RequestBody UserLoginRequest loginRequest) {
-        // Kiểm tra thông tin đăng nhập (đơn giản là username là "user" và mật khẩu là "password")
-        if ("user".equals(loginRequest.getUsername()) && "password".equals(loginRequest.getPassword())) {
-            // Tạo và trả về JWT token
-            return jwtUtils.generateToken(loginRequest.getUsername());
-        }
-        throw new RuntimeException("Invalid username or password");
-    }
-}
+    @PostMapping("/api/login")
+    public ResponseEntity<?> login(@RequestBody User user) {
 
-class UserLoginRequest {
-    private String username;
-    private String password;
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
+        Authentication authentication
+                = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword()));
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+        String jwt = jwtService.generateTokenLogin(authentication);
+        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        User currentUser = userService.findByUsername(user.getUsername());
+        return ResponseEntity.ok(new JwtResponse(currentUser.getId(), jwt, userDetails.getUsername(), userDetails.getUsername(), userDetails.getAuthorities()));
     }
 }
